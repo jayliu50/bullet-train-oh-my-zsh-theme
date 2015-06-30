@@ -322,7 +322,7 @@ prompt_git() {
     prompt_segment $BULLETTRAIN_GIT_BG $BULLETTRAIN_GIT_FG
 
     if [[ $BULLETTRAIN_GIT_EXTENDED == true ]] then
-      echo -n $(git_prompt_info)$(git_time_since_commit)$(git_prompt_status)
+      echo -n $(git_time_since_commit) $(git_prompt_info)$(git_prompt_status)
     else
       echo -n $(git_prompt_info)
     fi
