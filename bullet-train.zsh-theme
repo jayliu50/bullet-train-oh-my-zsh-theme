@@ -432,4 +432,4 @@ build_prompt() {
 
 PROMPT='
 %{%f%b%k%}$(build_prompt)
-%{${fg_bold[default]}%}$(prompt_char) %{$reset_color%}'
+%{$fg[blue]%}%!%{$reset_color%} %{${fg_bold[default]}%}$(prompt_char) %{$reset_color%}'
