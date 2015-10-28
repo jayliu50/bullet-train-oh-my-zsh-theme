@@ -12,8 +12,8 @@ theme based on the
 simplicity, showing information only when it's relevant.
 
 It currently shows:
-- Current Python virtualenv
-- Current Ruby version and gemset, through RVM
+- Current Python virtualenv; when using Pyenv and no active virtualenv shows the current Python version the shell uses
+- Current Ruby version using Rbenv or chruby; version and gemset when on RVM
 - Current Node.js version, through NVM
 - Git status
 - Timestamp
@@ -24,6 +24,7 @@ It currently shows:
 If you want add some new feature, of fix some bug, open an issue and lets hack
 together.
 
+For a tmux theme to work with it, i suggest [Maglev](https://github.com/caiogondim/maglev).
 
 ## Preview
 
@@ -56,7 +57,8 @@ can check Bullet Train with some popular dark color schemes.
 
 In order to use the theme, you will first need:
 
-* Powerline compatible fonts like [Vim Powerline patched fonts](https://github.com/Lokaltog/powerline-fonts) or [Input Mono](http://input.fontbureau.com/)
+* Powerline compatible fonts like [Vim Powerline patched fonts](https://github.com/Lokaltog/powerline-fonts), [Input Mono](http://input.fontbureau.com/) or [Monoid](http://larsenwork.com/monoid/).
+* On Ubuntu like systems you'll need the `ttf-ancient-fonts` package to correctly display some unicode symbols that are not covered by the Powerline fonts above.
 * A ZSH framework like [antigen](https://github.com/zsh-users/antigen), [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) or [zgen](https://github.com/tarjoilija/zgen)
 * Make sure terminal is using 256-colors mode with `export TERM="xterm-256color"`
 * For [iTerm 2](http://iterm2.com/) users, make sure you go into your settings and set both the regular font and the non-ascii font to powerline compatible [fonts](https://github.com/powerline/fonts) or the prompt separators and special characters will not display correctly.
@@ -68,7 +70,7 @@ In order to use the theme, you will first need:
 
 1. Download the theme [here](http://raw.github.com/caiogondim/bullet-train-oh-my-zsh-theme/master/bullet-train.zsh-theme)
 
-2. Put the file **bullet-train.zsh-theme** in **~/.oh-my-zsh/themes/**
+2. Put the file **bullet-train.zsh-theme** in **$ZSH_CUSTOM/themes/**
 
 3. Configure the theme in your **~/.zshrc** file:
 
@@ -104,6 +106,9 @@ or don't want to see. All options must be overridden in your **.zshrc** file.
 |--------|-------|-------|
 |`BULLETTRAIN_PROMPT_CHAR`|`\$`|Character to be show before any command
 |`BULLETTRAIN_PROMPT_ROOT`|`true`|Highlight if running as root
+|`BULLETTRAIN_PROMPT_SEPARATE_LINE`|`true`|Make the prompt span across two lines
+|`BULLETTRAIN_PROMPT_ADD_NEWLINE`|`true`|Adds a newline character before each prompt line
+
 
 ### Status
 
@@ -120,6 +125,7 @@ or don't want to see. All options must be overridden in your **.zshrc** file.
 |Variable|Default|Meaning
 |--------|-------|-------|
 |`BULLETTRAIN_TIME_SHOW`|`true`|Show/hide that segment
+|`BULLETTRAIN_TIME_12HR`|`false`|Format time using 12-hour clock (am/pm)
 |`BULLETTRAIN_TIME_BG`|`''`|Background color
 |`BULLETTRAIN_TIME_FG`|`''`|Foreground color
 
@@ -133,7 +139,7 @@ or don't want to see. All options must be overridden in your **.zshrc** file.
 |`BULLETTRAIN_CONTEXT_DEFAULT_USER`|none|Default user. If you are running with other user other than default, the segment will be showed.
 |`BULLETTRAIN_IS_SSH_CLIENT`|none|If `true`, the segment will be showed.
 
-### Python virtualenv
+### Python virtualenv (+Pyenv)
 
 |Variable|Default|Meaning
 |--------|-------|-------|
@@ -151,14 +157,23 @@ or don't want to see. All options must be overridden in your **.zshrc** file.
 |`BULLETTRAIN_NVM_FG`|`white`|Foreground color
 |`BULLETTRAIN_NVM_PREFIX`|`"⬡ "`|Prefix of the segment
 
-### Ruby RVM
+### Ruby RVM/Rbenv
 
 |Variable|Default|Meaning
 |--------|-------|-------|
-|`BULLETTRAIN_RVM_SHOW`|`true`|Show/hide that segment
-|`BULLETTRAIN_RVM_BG`|`magenta`|Background color
-|`BULLETTRAIN_RVM_FG`|`white`|Foreground color
-|`BULLETTRAIN_RVM_PREFIX`|`"♦"️`|Prefix of the segment
+|`BULLETTRAIN_RUBY_SHOW`|`true`|Show/hide that segment
+|`BULLETTRAIN_RUBY_BG`|`magenta`|Background color
+|`BULLETTRAIN_RUBY_FG`|`white`|Foreground color
+|`BULLETTRAIN_RUBY_PREFIX`|`"♦"`|Prefix of the segment
+
+### Go
+
+|Variable|Default|Meaning
+|--------|-------|-------|
+|`BULLETTRAIN_GO_SHOW`|`false`|Show/hide that segment
+|`BULLETTRAIN_GO_BG`|`green`|Background color
+|`BULLETTRAIN_GO_FG`|`white`|Foreground color
+|`BULLETTRAIN_GO_PREFIX`|`go`|Prefix of the segment
 
 ### Dir
 
@@ -167,7 +182,8 @@ or don't want to see. All options must be overridden in your **.zshrc** file.
 |`BULLETTRAIN_DIR_SHOW`|`true`|Show/hide that segment
 |`BULLETTRAIN_DIR_BG`|`blue`|Background color
 |`BULLETTRAIN_DIR_FG`|`white`|Foreground color
-|`BULLETTRAIN_DIR_EXTENDED`|`true`|Show user and machine in an SCP formatted style.
+|`BULLETTRAIN_DIR_CONTEXT_SHOW`|`false`|Show user and machine in an SCP formatted style
+|`BULLETTRAIN_DIR_EXTENDED`|`1`|Extended path (0=short path, 1=medium path, 2=complete path, everything else=medium path)
 
 ### Git
 
@@ -201,28 +217,36 @@ most of the code was later erased and its now more closely related to
 of the project:
 
 ```
-82  Caio Gondim
+110 Caio Gondim
 33  Jérémy Romey
-07  Jocelyn Mallon
-06  Jérémy Romey
-06  Dan Kaplun
-05  Arthur Wang
-04  Flavius Aspra
-04  Joe Block
-02  wujtruj
-02  itsZero (Chien-An Cho)
-01  m.kuehn
-01  Adrien Brault
-01  yachi
-01  Guillaume BINET
-01  Hannes Frank
-01  Kevin
-01  Mario Zigliotto
-01  Marius Krämer
-01  Michael Robinson
-01  gvillalta99
-01  illuminatis
-01  krischer
+11  Greg Fitzgerald
+7   Jocelyn Mallon
+6   Joe Block
+6   Dan Kaplun
+6   Jérémy Romey
+5   Viktor (Icon) VAD
+5   Arthur Wang
+4   Flavius Aspra
+3   Michael Cornell
+3   Mario Zigliotto
+2   itsZero (Chien-An Cho)
+2   wujtruj
+1   m.kuehn
+1   Adrien Brault
+1   yachi
+1   Andreas Galauner
+1   Fabio Poloni
+1   Guillaume BINET
+1   Hannes Frank
+1   Kevin
+1   Manuel Hoffmann
+1   Marius Krämer
+1   Michael Robinson
+1   Nicholas
+1   Sébastien Bordenave
+1   gvillalta99
+1   illuminatis
+1   krischer
 ```
 
 ## Credits
@@ -235,7 +259,7 @@ This theme is highly inspired by the following themes:
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2014 [Caio Gondim](http://caiogondim.com)
+Copyright (c) 2014-2015 [Caio Gondim](http://caiogondim.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
