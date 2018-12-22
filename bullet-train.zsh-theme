@@ -23,6 +23,7 @@ if [ ! -n "${BULLETTRAIN_PROMPT_ORDER+1}" ]; then
     custom
     context
     dir
+    proxy
     screen
     perl
     ruby
@@ -83,6 +84,17 @@ if [ ! -n "${BULLETTRAIN_CUSTOM_BG+1}" ]; then
 fi
 if [ ! -n "${BULLETTRAIN_CUSTOM_FG+1}" ]; then
   BULLETTRAIN_CUSTOM_FG=default
+fi
+
+# PROXY
+if [ ! -n "${BULLETTRAIN_PROXY_BG+1}" ]; then
+  BULLETTRAIN_PROXY_BG=yellow
+fi
+if [ ! -n "${BULLETTRAIN_PROXY_FG+1}" ]; then
+  BULLETTRAIN_PROXY_FG=black
+fi
+if [ ! -n "${BULLETTRAIN_PROXY_PREFIX+1}" ]; then
+  BULLETTRAIN_PROXY_PREFIX="🏢"
 fi
 
 # VIRTUALENV
@@ -414,6 +426,11 @@ prompt_custom() {
   [[ -n "${custom_msg}" ]] && prompt_segment $BULLETTRAIN_CUSTOM_BG $BULLETTRAIN_CUSTOM_FG "${custom_msg}"
 }
 
+# Proxy
+prompt_proxy() {
+  [[ -v https_proxy || -v http_proxy ]] && prompt_segment $BULLETTRAIN_PROXY_BG $BULLETTRAIN_PROXY_FG $BULLETTRAIN_PROXY_PREFIX "${https_proxy}"
+}
+
 # Git
 
 # Colors vary depending on time lapsed.
@@ -612,7 +629,7 @@ prompt_kctx() {
   if command -v kubectl > /dev/null 2>&1; then
     if [[ -f $BULLETTRAIN_KCTX_KCONFIG ]]; then
       prompt_segment $BULLETTRAIN_KCTX_BG $BULLETTRAIN_KCTX_FG $BULLETTRAIN_KCTX_PREFIX" $(cat $BULLETTRAIN_KCTX_KCONFIG|grep current-context| awk '{print $2}')"
-    fi  
+    fi
   fi
 }
 
